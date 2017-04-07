@@ -20,6 +20,7 @@
 #ifndef __HWC_DISPLAY_H__
 #define __HWC_DISPLAY_H__
 
+#include <sys/stat.h>
 #include <QService.h>
 #include <core/core_interface.h>
 #include <hardware/hwcomposer.h>
@@ -83,6 +84,14 @@ class HWCColorMode {
 
 class HWCDisplay : public DisplayEventHandler {
  public:
+  enum DisplayStatus {
+    kDisplayStatusInvalid = -1,
+    kDisplayStatusOffline,
+    kDisplayStatusOnline,
+    kDisplayStatusPause,
+    kDisplayStatusResume,
+  };
+
   virtual ~HWCDisplay() {}
   virtual int Init();
   virtual int Deinit();
@@ -97,7 +106,7 @@ class HWCDisplay : public DisplayEventHandler {
   virtual HWC2::PowerMode GetLastPowerMode();
   virtual int SetFrameBufferResolution(uint32_t x_pixels, uint32_t y_pixels);
   virtual void GetFrameBufferResolution(uint32_t *x_pixels, uint32_t *y_pixels);
-  virtual int SetDisplayStatus(uint32_t display_status);
+  virtual int SetDisplayStatus(DisplayStatus display_status);
   virtual int OnMinHdcpEncryptionLevelChange(uint32_t min_enc_level);
   virtual int Perform(uint32_t operation, ...);
   virtual void SetSecureDisplay(bool secure_display_active);
@@ -119,7 +128,7 @@ class HWCDisplay : public DisplayEventHandler {
   virtual int GetFrameCaptureStatus() { return -EAGAIN; }
 
   // Display Configurations
-  virtual int SetActiveDisplayConfig(int config);
+  virtual int SetActiveDisplayConfig(uint32_t config);
   virtual int GetActiveDisplayConfig(uint32_t *config);
   virtual int GetDisplayConfigCount(uint32_t *count);
   virtual int GetDisplayAttributesForConfig(int config,
@@ -191,13 +200,6 @@ class HWCDisplay : public DisplayEventHandler {
   virtual HWC2::Error Present(int32_t *out_retire_fence) = 0;
 
  protected:
-  enum DisplayStatus {
-    kDisplayStatusOffline = 0,
-    kDisplayStatusOnline,
-    kDisplayStatusPause,
-    kDisplayStatusResume,
-  };
-
   // Maximum number of layers supported by display manager.
   static const uint32_t kMaxLayerCount = 32;
 

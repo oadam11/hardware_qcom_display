@@ -32,7 +32,7 @@ endif
 
 #Common C flags
 common_flags += -DDEBUG_CALC_FPS -Wno-missing-field-initializers
-common_flags += -Wconversion -Wall -Werror -std=c++11
+common_flags += -Wconversion -Wall -Werror -std=c++14
 ifneq ($(TARGET_USES_GRALLOC1), true)
     common_flags += -isystem $(display_top)/libgralloc
 else
